@@ -1,0 +1,37 @@
+{
+    "name": "armenio/armenio-laminas-components",
+    "description": "A set of components for laminas framework",
+    "type": "library",
+    "keywords": [
+        "form",
+        "filter",
+        "date",
+        "time",
+        "datetime",
+        "number",
+        "i18n",
+        "laminas",
+        "rafael armenio"
+    ],
+    "homepage": "https://github.com/armenio/armenio-laminas-components",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rafael Armênio",
+            "email": "rafael.armenio@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3 || ~8.0.0",
+        "ext-intl": "*",
+        "ext-fileinfo": "*",
+        "laminas/laminas-filter": "^2.11",
+        "laminas/laminas-mvc-form": "^1.1",
+        "laminas/laminas-mvc": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Armenio\\": "src/"
+        }
+    }
+}
