@@ -27,7 +27,8 @@
         "ext-fileinfo": "*",
         "laminas/laminas-filter": "^2.11",
         "laminas/laminas-mvc-form": "^1.1",
-        "laminas/laminas-mvc": "^3.2"
+        "laminas/laminas-mvc": "^3.2",
+        "psr/http-message": "^1.0"
     },
     "autoload": {
         "psr-4": {
