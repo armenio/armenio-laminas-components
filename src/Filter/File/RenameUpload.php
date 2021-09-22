@@ -12,6 +12,10 @@ namespace Armenio\Filter\File;
 
 use Laminas\Filter\Exception;
 use Laminas\Filter\File\RenameUpload as VendorRenameUpload;
+use Laminas\Filter\FilterChain;
+use Laminas\Filter\StringToLower;
+use Laminas\Filter\Word\SeparatorToSeparator;
+use Laminas\I18n\Filter\Alnum;
 use Laminas\Stdlib\ErrorHandler;
 use Psr\Http\Message\UploadedFileInterface;
 
@@ -22,6 +26,39 @@ use Psr\Http\Message\UploadedFileInterface;
  */
 class RenameUpload extends VendorRenameUpload
 {
+    /**
+     * @return bool
+     */
+    public function getSanitize()
+    {
+        return $this->options['sanitize'];
+    }
+
+    /**
+     * @param bool $flag
+     *
+     * @return $this
+     */
+    public function setSanitize($flag = true)
+    {
+        $this->options['sanitize'] = (bool)$flag;
+        return $this;
+    }
+
+    /**
+     * RenameUpload constructor.
+     *
+     * @param array $targetOrOptions
+     */
+    public function __construct($targetOrOptions = [])
+    {
+        $this->options = array_merge($this->options, [
+            'sanitize' => false,
+        ]);
+
+        parent::__construct($targetOrOptions);
+    }
+
     /**
      * @param $source
      * @param $clientFileName
@@ -52,7 +89,38 @@ class RenameUpload extends VendorRenameUpload
             }
         }
 
-        return parent::getFinalTarget($source, $clientFileName);
+        $targetFile = parent::getFinalTarget($source, $clientFileName);
+
+        if ($this->getSanitize()) {
+            $targetFile = $this->sanitizeFilename($targetFile);
+        }
+
+        return $targetFile;
+    }
+
+    /**
+     * @param $filename
+     *
+     * @return string
+     */
+    protected function sanitizeFilename($filename)
+    {
+        $info = pathinfo($filename);
+
+        $dir = $info['dirname'] . DIRECTORY_SEPARATOR;
+
+        $filename = (new FilterChain())
+            ->attach(new Alnum(true))
+            ->attach(new SeparatorToSeparator(' ', '_'))
+            ->attach(new StringToLower())
+            ->filter($info['filename']);
+
+        $extension = '';
+        if (isset($info['extension'])) {
+            $extension .= '.' . $info['extension'];
+        }
+
+        return $dir . $filename . $extension;
     }
 
     /**
