@@ -17,7 +17,6 @@ use Laminas\Filter\StringToLower;
 use Laminas\Filter\Word\SeparatorToSeparator;
 use Laminas\I18n\Filter\Alnum;
 use Laminas\Stdlib\ErrorHandler;
-use Psr\Http\Message\UploadedFileInterface;
 
 /**
  * Class RenameUpload
@@ -89,11 +88,11 @@ class RenameUpload extends VendorRenameUpload
             }
         }
 
-        $targetFile = parent::getFinalTarget($source, $clientFileName);
-
         if ($this->getSanitize()) {
-            $targetFile = $this->sanitizeFilename($targetFile);
+            $clientFileName = $this->sanitizeFilename($clientFileName);
         }
+
+        $targetFile = parent::getFinalTarget($source, $clientFileName);
 
         return $targetFile;
     }
@@ -107,8 +106,6 @@ class RenameUpload extends VendorRenameUpload
     {
         $info = pathinfo($filename);
 
-        $dir = $info['dirname'] . DIRECTORY_SEPARATOR;
-
         $filename = (new FilterChain())
             ->attach(new Alnum(true))
             ->attach(new SeparatorToSeparator(' ', '_'))
@@ -120,51 +117,6 @@ class RenameUpload extends VendorRenameUpload
             $extension .= '.' . $info['extension'];
         }
 
-        return $dir . $filename . $extension;
-    }
-
-    /**
-     * @param array|UploadedFileInterface|string $value
-     *
-     * @return array|mixed|UploadedFileInterface|string
-     * @throws \ErrorException
-     */
-    public function filter($value)
-    {
-        if (is_array($value) && isset($value['tmp_name'])) {
-            return $this->filterSapiUploadedFile($value);
-        }
-
-        return parent::filter($value);
-    }
-
-    /**
-     * @param array $fileData
-     *
-     * @return array|mixed|string
-     * @throws \ErrorException
-     */
-    private function filterSapiUploadedFile(array $fileData)
-    {
-        $sourceFile = $fileData['tmp_name'];
-
-        if (isset($this->alreadyFiltered[$sourceFile])) {
-            return $this->alreadyFiltered[$sourceFile]['tmp_name'];
-        }
-
-        $clientFilename = $fileData['name'];
-
-        $targetFile = $this->getFinalTarget($sourceFile, $clientFilename);
-        if ($sourceFile === $targetFile || ! file_exists($sourceFile)) {
-            return $fileData['tmp_name'];
-        }
-
-        $this->checkFileExists($targetFile);
-        $this->moveUploadedFile($sourceFile, $targetFile);
-
-        $this->alreadyFiltered[$sourceFile] = $fileData;
-        $this->alreadyFiltered[$sourceFile]['tmp_name'] = $targetFile;
-
-        return $this->alreadyFiltered[$sourceFile]['tmp_name'];
+        return $filename . $extension;
     }
 }
