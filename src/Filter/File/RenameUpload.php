@@ -80,7 +80,7 @@ class RenameUpload extends VendorRenameUpload
                 $warningException = ErrorHandler::stop();
                 if (! is_dir($target)) {
                     throw new Exception\RuntimeException(
-                        sprintf('Could not create target directory: %s', $sourceFile),
+                        sprintf('Could not create target directory: %s', $target),
                         0,
                         $warningException
                     );
