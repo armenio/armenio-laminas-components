@@ -88,13 +88,11 @@ class RenameUpload extends VendorRenameUpload
             }
         }
 
-        if ($this->getSanitize()) {
+        if ($this->getSanitize() && $this->getUseUploadName()) {
             $clientFileName = $this->sanitizeFilename($clientFileName);
         }
 
-        $targetFile = parent::getFinalTarget($source, $clientFileName);
-
-        return $targetFile;
+        return parent::getFinalTarget($source, $clientFileName);
     }
 
     /**
