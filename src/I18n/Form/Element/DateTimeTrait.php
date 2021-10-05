@@ -6,8 +6,6 @@
  * @link http://github.com/armenio
  */
 
-declare(strict_types=1);
-
 namespace Armenio\I18n\Form\Element;
 
 use Laminas\I18n\Validator\DateTime as DateTimeI18nValidator;

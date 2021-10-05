@@ -6,8 +6,6 @@
  * @link http://github.com/armenio
  */
 
-declare(strict_types=1);
-
 namespace Armenio\Filter\File;
 
 use Laminas\Filter\Exception;
@@ -68,27 +66,24 @@ class RenameUpload extends VendorRenameUpload
     protected function getFinalTarget($source, $clientFileName)
     {
         $target = $this->getTarget();
+        if ($target === null || $target === '*') {
+            $target = $source;
+        }
 
-        if (null !== $target && '*' !== $target) {
-            $last = $target[strlen($target) - 1];
-            if (! is_dir($target)
-                && ! file_exists($target)
-                && ($last === '/' || $last === '\\')
-            ) {
-                ErrorHandler::start();
-                mkdir($target, 0755, true);
-                $warningException = ErrorHandler::stop();
-                if (! is_dir($target)) {
-                    throw new Exception\RuntimeException(
-                        sprintf('Could not create target directory: %s', $target),
-                        0,
-                        $warningException
-                    );
-                }
+        if (! is_dir($target)) {
+            ErrorHandler::start();
+            mkdir($target, 0755, true);
+            $warningException = ErrorHandler::stop();
+            if (! is_dir($target)) {
+                throw new Exception\RuntimeException(
+                    sprintf('Could not create target directory: %s', $target),
+                    0,
+                    $warningException
+                );
             }
         }
 
-        if ($this->getSanitize() && $this->getUseUploadName()) {
+        if ($this->getUseUploadName() && $this->getSanitize()) {
             $clientFileName = $this->sanitizeFilename($clientFileName);
         }
 

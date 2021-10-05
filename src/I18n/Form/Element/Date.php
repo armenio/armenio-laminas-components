@@ -6,8 +6,6 @@
  * @link http://github.com/armenio
  */
 
-declare(strict_types=1);
-
 namespace Armenio\I18n\Form\Element;
 
 use Laminas\Form\Element\Date as VendorDate;

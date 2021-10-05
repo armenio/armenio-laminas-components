@@ -6,8 +6,6 @@
  * @link http://github.com/armenio
  */
 
-declare(strict_types=1);
-
 namespace ArmenioTest\Filter\File;
 
 use Armenio\Filter\File\RenameUpload as RenameUploadFilter;
@@ -31,6 +29,11 @@ class RenameUploadTest extends TestCase
     /**
      * @var string
      */
+    protected $sourceFilename = 'tést file Not^Sanitizêd@.txt';
+
+    /**
+     * @var string
+     */
     protected $sourceFile;
 
     /**
@@ -43,6 +46,16 @@ class RenameUploadTest extends TestCase
      */
     protected $targetPathFile;
 
+    /**
+     * @var string
+     */
+    protected $targetFilenameSanitized = 'tést_file_notsanitizêd.txt';
+
+    /**
+     * @var string
+     */
+    protected $targetPathFileSanitized;
+
     public function setUp(): void
     {
         $this->filesPath = sprintf('%s%s%s', sys_get_temp_dir(), DIRECTORY_SEPARATOR, uniqid('laminasilter'));
@@ -50,8 +63,9 @@ class RenameUploadTest extends TestCase
 
         mkdir($this->targetPath, 0775, true);
 
-        $this->sourceFile = $this->filesPath . DIRECTORY_SEPARATOR . 'tést file Not^Sanitizêd@.txt';
-        $this->targetPathFile = $this->targetPath . DIRECTORY_SEPARATOR . 'tést_file_notsanitizêd.txt';
+        $this->sourceFile = $this->filesPath . DIRECTORY_SEPARATOR . $this->sourceFilename;
+        $this->targetPathFile = $this->targetPath . DIRECTORY_SEPARATOR . $this->sourceFilename;
+        $this->targetPathFileSanitized = $this->targetPath . DIRECTORY_SEPARATOR . $this->targetFilenameSanitized;
 
         touch($this->sourceFile);
     }
@@ -106,37 +120,65 @@ class RenameUploadTest extends TestCase
     /**
      * @return void
      */
-    public function testTargetDirectoryWillNotBeCreated()
+    public function testTargetDirectoryWillBeCreatedWithoutUseUploadName()
     {
-        $filter = new RenameUploadFilter($this->targetPath . '/targetDirectoryWillNotExists');
-        $filter->filter('falsefile');
-        $this->assertFalse(is_dir($this->targetPath . '/targetDirectoryWillNotExists'));
+        $filter = new RenameUploadMock($this->targetPath . '/testTargetDirectoryWillBeCreatedWithoutUseUploadName');
+        $filter->setUseUploadName(false);
+        $filter->filter($this->sourceFile);
+        $this->assertFalse($filter->getUseUploadName());
+        $this->assertTrue(is_dir($this->targetPath . '/testTargetDirectoryWillBeCreatedWithoutUseUploadName'));
+        $this->assertTrue(file_exists($this->targetPath . '/testTargetDirectoryWillBeCreatedWithoutUseUploadName/' . $this->sourceFilename));
     }
 
     /**
      * @return void
      */
-    public function testTargetDirectoryWillBeCreated()
+    public function testTargetDirectoryWillBeCreatedWithUseUploadName()
     {
-        $filter = new RenameUploadFilter($this->targetPath . '/targetDirectoryWillExists/');
-        $filter->filter('falsefile');
-        $this->assertTrue(is_dir($this->targetPath . '/targetDirectoryWillExists/'));
+        $filter = new RenameUploadMock($this->targetPath . '/testTargetDirectoryWillBeCreatedWithUseUploadName');
+        $filter->setUseUploadName(true);
+        $filter->filter($this->sourceFile);
+        $this->assertTrue($filter->getUseUploadName());
+        $this->assertTrue(is_dir($this->targetPath . '/testTargetDirectoryWillBeCreatedWithUseUploadName'));
+        $this->assertTrue(file_exists($this->targetPath . '/testTargetDirectoryWillBeCreatedWithUseUploadName/' . $this->sourceFilename));
     }
 
     /**
      * @return void
      */
-    public function testTargetTargetDirectoryWillNotBeCreatedWithBackSlash()
+    public function testTargetDirectoryWillBeCreatedWithUseUploadNameAndSanitize()
     {
-        $filter = new RenameUploadFilter($this->targetPath . '/targetDirectoryWillExistsWithBackslash\\');
-        $filter->filter('falsefile');
-        $this->assertTrue(is_dir($this->targetPath . '/targetDirectoryWillExistsWithBackslash\\'));
+        $filter = new RenameUploadMock($this->targetPath . '/testTargetDirectoryWillBeCreatedWithUseUploadNameWithoutBar');
+        $filter->setUseUploadName(true);
+        $filter->setSanitize(true);
+        $filter->filter($this->sourceFile);
+        $this->assertTrue($filter->getUseUploadName());
+        $this->assertTrue($filter->getSanitize());
+        $this->assertTrue(is_dir($this->targetPath . '/testTargetDirectoryWillBeCreatedWithUseUploadNameWithoutBar'));
+        $this->assertTrue(file_exists($this->targetPath . '/testTargetDirectoryWillBeCreatedWithUseUploadNameWithoutBar/' . $this->targetFilenameSanitized));
     }
 
     /**
      * @return void
      */
-    public function testGetSanitizedFile()
+    public function testTargetPathFileWillBeCreated()
+    {
+        $filter = new RenameUploadMock([
+            'target' => $this->targetPath,
+            'use_upload_name' => true,
+        ]);
+        $this->assertEquals($this->targetPath, $filter->getTarget());
+        $this->assertTrue($filter->getUseUploadName());
+
+        $filered = $filter->filter($this->sourceFile);
+        $this->assertTrue(file_exists($filered));
+        $this->assertEquals($this->targetPathFile, $filered);
+    }
+
+    /**
+     * @return void
+     */
+    public function testTargetPathFileSanitizedWillBeCreated()
     {
         $filter = new RenameUploadMock([
             'target' => $this->targetPath,
@@ -149,6 +191,6 @@ class RenameUploadTest extends TestCase
 
         $filered = $filter->filter($this->sourceFile);
         $this->assertTrue(file_exists($filered));
-        $this->assertEquals($this->targetPathFile, $filered);
+        $this->assertEquals($this->targetPathFileSanitized, $filered);
     }
 }

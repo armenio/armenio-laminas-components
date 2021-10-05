@@ -6,8 +6,6 @@
  * @link http://github.com/armenio
  */
 
-declare(strict_types=1);
-
 namespace ArmenioTest\Filter;
 
 use Armenio\Filter\ArrayKey as ArrayKeyFilter;
