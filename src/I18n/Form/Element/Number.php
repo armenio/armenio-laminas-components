@@ -231,7 +231,7 @@ class Number extends VendorNumber
     public function getValue($returnFormattedValue = true)
     {
         $value = parent::getValue();
-        if (! $returnFormattedValue) {
+        if (! is_numeric($value) || ! $returnFormattedValue) {
             return $value;
         }
 
