@@ -175,12 +175,61 @@ class DateTimeParse extends AbstractFilter
             return $this->formatter;
         }
 
+        $locale = $this->getLocale();
+        $dateType = $this->getDateType();
+        $timeType = $this->getTimeType();
+        $pattern = null;
+
+        // pt_BR ICU workaround
+        if ($locale === 'pt_BR') {
+            $pattern = '';
+
+            if ($timeType !== \IntlDateFormatter::NONE) {
+                switch ($dateType) {
+                    case \IntlDateFormatter::SHORT:
+                        $pattern .= "dd/MM/y";
+                        break;
+                    case \IntlDateFormatter::MEDIUM:
+                        $pattern .= "d 'de' MMM 'de' y";
+                        break;
+                    case \IntlDateFormatter::LONG:
+                        $pattern .= "d 'de' MMMM 'de' y";
+                        break;
+                    case \IntlDateFormatter::FULL:
+                        $pattern .= "EEEE, d 'de' MMMM 'de' y";
+                        break;
+                }
+            }
+
+            if ($timeType !== \IntlDateFormatter::NONE) {
+                if ($pattern !== '') {
+                    $pattern .= " ";
+                }
+
+                switch ($timeType) {
+                    case \IntlDateFormatter::SHORT:
+                        $pattern .= "HH:mm";
+                        break;
+                    case \IntlDateFormatter::MEDIUM:
+                        $pattern .= "HH:mm:ss";
+                        break;
+                    case \IntlDateFormatter::LONG:
+                        $pattern .= "HH:mm:ss z";
+                        break;
+                    case \IntlDateFormatter::FULL:
+                        $pattern .= "HH:mm:ss zzzz";
+                        break;
+                }
+            }
+        }
+
         $formatter = new \IntlDateFormatter(
-            $this->getLocale(),
-            $this->getDateType(),
-            $this->getTimeType(),
+            $locale,
+            $dateType,
+            $timeType,
             $this->getTimezone(),
-            $this->getCalendar()
+            $this->getCalendar(),
+            $pattern
         );
 
         $formatter->setLenient(false);
