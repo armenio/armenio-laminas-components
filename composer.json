@@ -25,13 +25,8 @@
         "php": "^7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
         "ext-fileinfo": "*",
         "ext-intl": "*",
-        "laminas/laminas-filter": "^2.11",
-        "laminas/laminas-mvc-form": "^1.1"
-    },
-    "require-dev": {
-        "laminas/laminas-coding-standard": "^2.3",
-        "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.3"
+        "laminas/laminas-filter": "^2.33",
+        "laminas/laminas-mvc-form": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -44,12 +39,20 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "scripts": {
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    },
+    "require-dev": {
+        "laminas/laminas-coding-standard": "^2.5",
+        "phpspec/prophecy-phpunit": "^2.1",
+        "phpunit/phpunit": "^10.5"
     }
 }
