@@ -10,11 +10,6 @@ namespace Armenio\I18n\Form\Element;
 
 use Laminas\Form\Element\DateTime as VendorDateTime;
 
-/**
- * Class DateTime
- *
- * @package Armenio\I18n\Form\Element
- */
 class DateTime extends VendorDateTime
 {
     use DateTimeTrait;

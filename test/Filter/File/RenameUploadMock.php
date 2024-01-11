@@ -10,17 +10,10 @@ namespace ArmenioTest\Filter\File;
 
 use Armenio\Filter\File\RenameUpload;
 
-/**
- * Class RenameUploadMock
- *
- * @package ArmenioTest\Filter\File
- */
 class RenameUploadMock extends RenameUpload
 {
     /**
-     * RenameUploadMock constructor.
-     *
-     * @param array $targetOrOptions
+     * @param array|string $targetOrOptions
      */
     public function __construct($targetOrOptions = [])
     {
@@ -30,10 +23,8 @@ class RenameUploadMock extends RenameUpload
     /**
      * @param string $sourceFile
      * @param string $targetFile
-     *
-     * @return bool
      */
-    protected function moveUploadedFile($sourceFile, $targetFile)
+    protected function moveUploadedFile($sourceFile, $targetFile): bool
     {
         return rename($sourceFile, $targetFile);
     }

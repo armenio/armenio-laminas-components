@@ -10,11 +10,6 @@ namespace Armenio\Filter;
 
 use Laminas\Filter\AbstractFilter;
 
-/**
- * Class ArrayKey
- *
- * @package Armenio\Filter
- */
 class ArrayKey extends AbstractFilter
 {
     /**
@@ -33,30 +28,21 @@ class ArrayKey extends AbstractFilter
     }
 
     /**
-     * @param $key
-     *
-     * @return $this
+     * @param int|string $key
      */
-    public function setKey($key)
+    public function setKey($key): ArrayKey
     {
         $this->options['key'] = $key;
         return $this;
     }
 
-    /**
-     * ArrayKey constructor.
-     *
-     * @param array $options
-     */
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         $this->setOptions($options);
     }
 
     /**
-     * @param mixed $value
-     *
-     * @return array|mixed
+     * @return mixed
      */
     public function filter($value)
     {

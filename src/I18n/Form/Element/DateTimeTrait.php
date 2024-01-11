@@ -9,169 +9,93 @@
 namespace Armenio\I18n\Form\Element;
 
 use Laminas\I18n\Validator\DateTime as DateTimeI18nValidator;
+use Laminas\Validator\ValidatorInterface;
 
-/**
- * Trait DateTimeTrait
- *
- * @package Armenio\I18n\Form\Element
- */
 trait DateTimeTrait
 {
-    /**
-     * @var string|null
-     */
-    protected $locale;
+    protected ?string $locale = null;
 
-    /**
-     * @var int
-     */
-    protected $dateType = self::DATETIME_DATE_TYPE;
+    protected int $dateType = self::DATETIME_DATE_TYPE;
 
-    /**
-     * @var int
-     */
-    protected $timeType = self::DATETIME_TIME_TYPE;
+    protected int $timeType = self::DATETIME_TIME_TYPE;
 
-    /**
-     * @var string|null
-     */
-    protected $timezone;
+    protected ?string $timezone = null;
 
-    /**
-     * @var int
-     */
-    protected $calendar = \IntlDateFormatter::GREGORIAN;
+    protected int $calendar = \IntlDateFormatter::GREGORIAN;
 
-    /**
-     * @var string
-     */
-    protected $pattern = self::DATETIME_PATTERN;
+    protected string $pattern = self::DATETIME_PATTERN;
 
-    /**
-     * @var \IntlDateFormatter|null
-     */
-    protected $formatter;
+    protected ?\IntlDateFormatter $formatter = null;
 
-    /**
-     * @return string|null
-     */
     public function getLocale(): ?string
     {
         return $this->locale;
     }
 
-    /**
-     * @param string|null $locale
-     *
-     * @return $this
-     */
     public function setLocale(?string $locale): self
     {
         $this->locale = $locale;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getDateType(): int
     {
         return $this->dateType;
     }
 
-    /**
-     * @param int $dateType
-     *
-     * @return $this
-     */
     public function setDateType(int $dateType): self
     {
         $this->dateType = $dateType;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getTimeType(): int
     {
         return $this->timeType;
     }
 
-    /**
-     * @param int $timeType
-     *
-     * @return $this
-     */
     public function setTimeType(int $timeType): self
     {
         $this->timeType = $timeType;
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTimezone(): ?string
     {
         return $this->timezone;
     }
 
-    /**
-     * @param string|null $timezone
-     *
-     * @return $this
-     */
     public function setTimezone(?string $timezone): self
     {
         $this->timezone = $timezone;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getCalendar(): int
     {
         return $this->calendar;
     }
 
-    /**
-     * @param int $calendar
-     *
-     * @return $this
-     */
     public function setCalendar(int $calendar): self
     {
         $this->calendar = $calendar;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPattern(): string
     {
         return $this->pattern;
     }
 
-    /**
-     * @param string $pattern
-     *
-     * @return $this
-     */
     public function setPattern(string $pattern): self
     {
         $this->pattern = $pattern;
         return $this;
     }
 
-    /**
-     * @return \IntlDateFormatter|null
-     */
     public function getFormatter(): ?\IntlDateFormatter
     {
-        if (null !== $this->formatter) {
+        if ($this->formatter !== null) {
             return $this->formatter;
         }
 
@@ -237,11 +161,6 @@ trait DateTimeTrait
         return $formatter;
     }
 
-    /**
-     * @param \IntlDateFormatter|null $formatter
-     *
-     * @return $this
-     */
     public function setFormatter(?\IntlDateFormatter $formatter): self
     {
         $this->formatter = $formatter;
@@ -250,10 +169,8 @@ trait DateTimeTrait
 
     /**
      * @param array|\Traversable $options
-     *
-     * @return $this
      */
-    public function setOptions($options)
+    public function setOptions($options): self
     {
         parent::setOptions($options);
 
@@ -295,11 +212,9 @@ trait DateTimeTrait
     }
 
     /**
-     * @param bool $returnFormattedValue
-     *
      * @return \DateTimeInterface|false|mixed|string
      */
-    public function getValue($returnFormattedValue = true)
+    public function getValue(bool $returnFormattedValue = true)
     {
         $value = parent::getValue(false);
         if (! $value instanceof \DateTimeInterface || ! $returnFormattedValue) {
@@ -308,7 +223,7 @@ trait DateTimeTrait
 
         $formatter = $this->getFormatter();
 
-        if (false === $formatter || intl_is_failure($formatter->getErrorCode())) {
+        if ($formatter === false || intl_is_failure($formatter->getErrorCode())) {
             return $value;
         }
 
@@ -324,10 +239,7 @@ trait DateTimeTrait
         return $formatted;
     }
 
-    /**
-     * @return array
-     */
-    public function getInputSpecification()
+    public function getInputSpecification(): array
     {
         $spec = parent::getInputSpecification();
 
@@ -343,7 +255,7 @@ trait DateTimeTrait
     /**
      * @return DateTimeI18nValidator
      */
-    protected function getDateValidator()
+    protected function getDateValidator(): ValidatorInterface
     {
         return new DateTimeI18nValidator([
             'locale' => $this->getLocale(),
@@ -355,10 +267,7 @@ trait DateTimeTrait
         ]);
     }
 
-    /**
-     * @return array
-     */
-    protected function getDateTimeParseFilter()
+    protected function getDateTimeParseFilter(): array
     {
         return [
             'name' => 'Armenio\I18n\Filter\DateTimeParse',

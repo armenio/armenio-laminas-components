@@ -10,11 +10,6 @@ namespace Armenio\Filter;
 
 use Laminas\Filter\AbstractFilter;
 
-/**
- * Class StringReplace
- *
- * @package Armenio\Filter
- */
 class StringReplace extends AbstractFilter
 {
     /**
@@ -34,11 +29,9 @@ class StringReplace extends AbstractFilter
     }
 
     /**
-     * @param string $search
-     *
-     * @return $this
+     * @param mixed|string $search
      */
-    public function setSearch($search = '')
+    public function setSearch($search = ''): StringReplace
     {
         $this->options['search'] = (string)$search;
         return $this;
@@ -53,29 +46,20 @@ class StringReplace extends AbstractFilter
     }
 
     /**
-     * @param string $replace
-     *
-     * @return $this
+     * @param mixed|string $replace
      */
-    public function setReplace($replace = '')
+    public function setReplace($replace = ''): StringReplace
     {
         $this->options['replace'] = (string)$replace;
         return $this;
     }
 
-    /**
-     * StringReplace constructor.
-     *
-     * @param array $options
-     */
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         $this->setOptions($options);
     }
 
     /**
-     * @param mixed $value
-     *
      * @return array|bool|float|int|mixed|string|string[]
      */
     public function filter($value)

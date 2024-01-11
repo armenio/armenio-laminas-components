@@ -16,36 +16,21 @@ use Laminas\Filter\Word\SeparatorToSeparator;
 use Laminas\I18n\Filter\Alnum;
 use Laminas\Stdlib\ErrorHandler;
 
-/**
- * Class RenameUpload
- *
- * @package Armenio\Filter\File
- */
 class RenameUpload extends VendorRenameUpload
 {
-    /**
-     * @return bool
-     */
-    public function getSanitize()
+    public function getSanitize(): bool
     {
         return $this->options['sanitize'];
     }
 
-    /**
-     * @param bool $flag
-     *
-     * @return $this
-     */
-    public function setSanitize($flag = true)
+    public function setSanitize(bool $flag = true): RenameUpload
     {
-        $this->options['sanitize'] = (bool)$flag;
+        $this->options['sanitize'] = $flag;
         return $this;
     }
 
     /**
-     * RenameUpload constructor.
-     *
-     * @param array $targetOrOptions
+     * @param array|string $targetOrOptions
      */
     public function __construct($targetOrOptions = [])
     {
@@ -57,13 +42,13 @@ class RenameUpload extends VendorRenameUpload
     }
 
     /**
-     * @param $source
-     * @param $clientFileName
+     * @param string $source
+     * @param string|null $clientFileName
      *
      * @return string
      * @throws \ErrorException
      */
-    protected function getFinalTarget($source, $clientFileName)
+    protected function getFinalTarget($source, $clientFileName): string
     {
         $target = $this->getTarget();
         if ($target === null || $target === '*') {
@@ -90,12 +75,7 @@ class RenameUpload extends VendorRenameUpload
         return parent::getFinalTarget($source, $clientFileName);
     }
 
-    /**
-     * @param $filename
-     *
-     * @return string
-     */
-    protected function sanitizeFilename($filename)
+    protected function sanitizeFilename(string $filename): string
     {
         $info = pathinfo($filename);
 

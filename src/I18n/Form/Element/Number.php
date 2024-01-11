@@ -10,11 +10,6 @@ namespace Armenio\I18n\Form\Element;
 
 use Laminas\Form\Element\Number as VendorNumber;
 
-/**
- * Class Number
- *
- * @package Armenio\I18n\Form\Element
- */
 class Number extends VendorNumber
 {
     /**
@@ -24,134 +19,73 @@ class Number extends VendorNumber
         'type' => 'text',
     ];
 
-    /**
-     * @var string|null
-     */
-    protected $locale;
+    protected ?string $locale = null;
 
-    /**
-     * @var int
-     */
-    protected $style = \NumberFormatter::DEFAULT_STYLE;
+    protected int $style = \NumberFormatter::DEFAULT_STYLE;
 
-    /**
-     * @var int
-     */
-    protected $type = \NumberFormatter::TYPE_DOUBLE;
+    protected int $type = \NumberFormatter::TYPE_DOUBLE;
 
-    /**
-     * @var int|null
-     */
-    protected $decimals;
+    protected ?int $decimals = null;
 
-    /**
-     * @var array
-     */
-    protected $textAttributes = [];
+    protected array $textAttributes = [];
 
-    /**
-     * @var \NumberFormatter|null
-     */
-    protected $formatter;
+    protected ?\NumberFormatter $formatter = null;
 
-    /**
-     * @return string|null
-     */
     public function getLocale(): ?string
     {
         return $this->locale;
     }
 
-    /**
-     * @param string|null $locale
-     *
-     * @return $this
-     */
-    public function setLocale(?string $locale): self
+    public function setLocale(?string $locale): Number
     {
         $this->locale = $locale;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getStyle(): int
     {
         return $this->style;
     }
 
-    /**
-     * @param int $style
-     *
-     * @return $this
-     */
-    public function setStyle(int $style): self
+    public function setStyle(int $style): Number
     {
         $this->style = $style;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getType(): int
     {
         return $this->type;
     }
 
-    /**
-     * @param int $type
-     *
-     * @return $this
-     */
-    public function setType(int $type): self
+    public function setType(int $type): Number
     {
         $this->type = $type;
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getDecimals(): ?int
     {
         return $this->decimals;
     }
 
-    /**
-     * @param int|null $decimals
-     *
-     * @return $this
-     */
-    public function setDecimals(?int $decimals): self
+    public function setDecimals(?int $decimals): Number
     {
         $this->decimals = $decimals;
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getTextAttributes(): array
     {
         return $this->textAttributes;
     }
 
-    /**
-     * @param array $textAttributes
-     *
-     * @return $this
-     */
-    public function setTextAttributes(array $textAttributes): self
+    public function setTextAttributes(array $textAttributes): Number
     {
         $this->textAttributes = $textAttributes;
         return $this;
     }
 
-    /**
-     * @return \NumberFormatter|null
-     */
     public function getFormatter(): ?\NumberFormatter
     {
         if (null !== $this->formatter) {
@@ -175,12 +109,7 @@ class Number extends VendorNumber
         return $formatter;
     }
 
-    /**
-     * @param \NumberFormatter|null $formatter
-     *
-     * @return $this
-     */
-    public function setFormatter(?\NumberFormatter $formatter): self
+    public function setFormatter(?\NumberFormatter $formatter): Number
     {
         $this->formatter = $formatter;
         return $this;
@@ -188,10 +117,8 @@ class Number extends VendorNumber
 
     /**
      * @param array|\Traversable $options
-     *
-     * @return $this|Number
      */
-    public function setOptions($options)
+    public function setOptions($options): Number
     {
         parent::setOptions($options);
 
@@ -224,11 +151,9 @@ class Number extends VendorNumber
     }
 
     /**
-     * @param bool $returnFormattedValue
-     *
-     * @return false|mixed|string
+     * @return false|float|int|mixed|string
      */
-    public function getValue($returnFormattedValue = true)
+    public function getValue(bool $returnFormattedValue = true)
     {
         $value = parent::getValue();
         if (! is_numeric($value) || ! $returnFormattedValue) {
@@ -237,7 +162,7 @@ class Number extends VendorNumber
 
         $formatter = $this->getFormatter();
 
-        if (false === $formatter || intl_is_failure($formatter->getErrorCode())) {
+        if ($formatter === false || intl_is_failure($formatter->getErrorCode())) {
             return $value;
         }
 
@@ -250,10 +175,7 @@ class Number extends VendorNumber
         return $formatted;
     }
 
-    /**
-     * @return array
-     */
-    public function getInputSpecification()
+    public function getInputSpecification(): array
     {
         $spec = parent::getInputSpecification();
 
@@ -266,10 +188,7 @@ class Number extends VendorNumber
         return $spec;
     }
 
-    /**
-     * @return array
-     */
-    protected function getNumberParseFilter()
+    protected function getNumberParseFilter(): array
     {
         return [
             'name' => 'numberParse',

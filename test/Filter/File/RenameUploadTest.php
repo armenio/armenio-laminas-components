@@ -12,49 +12,23 @@ use Armenio\Filter\File\RenameUpload as RenameUploadFilter;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-/**
- * Class RenameUploadTest
- *
- * @package ArmenioTest\Filter\File
- */
 class RenameUploadTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var string
-     */
-    protected $filesPath;
+    protected ?string $filesPath = null;
 
-    /**
-     * @var string
-     */
-    protected $sourceFilename = 'tést file Not^Sanitizêd@.txt';
+    protected string $sourceFilename = 'tést file Not^Sanitizêd@.txt';
 
-    /**
-     * @var string
-     */
-    protected $sourceFile;
+    protected ?string $sourceFile;
 
-    /**
-     * @var string
-     */
-    protected $targetPath;
+    protected ?string $targetPath;
 
-    /**
-     * @var string
-     */
-    protected $targetPathFile;
+    protected ?string $targetPathFile;
 
-    /**
-     * @var string
-     */
-    protected $targetFilenameSanitized = 'tést_file_notsanitizêd.txt';
+    protected string $targetFilenameSanitized = 'tést_file_notsanitizêd.txt';
 
-    /**
-     * @var string
-     */
-    protected $targetPathFileSanitized;
+    protected ?string $targetPathFileSanitized;
 
     public function setUp(): void
     {
@@ -75,7 +49,7 @@ class RenameUploadTest extends TestCase
         $this->removeDir($this->filesPath);
     }
 
-    protected function removeDir($dir)
+    protected function removeDir($dir): void
     {
         if (! is_dir($dir)) {
             return;
@@ -95,10 +69,7 @@ class RenameUploadTest extends TestCase
         rmdir($dir);
     }
 
-    /**
-     * @return void
-     */
-    public function testOptions()
+    public function testOptions(): void
     {
         $filter = new RenameUploadFilter([
             'sanitize' => true,
@@ -106,10 +77,7 @@ class RenameUploadTest extends TestCase
         $this->assertTrue($filter->getSanitize());
     }
 
-    /**
-     * @return void
-     */
-    public function testGetSetOptions()
+    public function testGetSetOptions(): void
     {
         $filter = new RenameUploadFilter();
         $this->assertFalse($filter->getSanitize());
@@ -117,10 +85,7 @@ class RenameUploadTest extends TestCase
         $this->assertTrue($filter->getSanitize());
     }
 
-    /**
-     * @return void
-     */
-    public function testTargetDirectoryWillBeCreatedWithoutUseUploadName()
+    public function testTargetDirectoryWillBeCreatedWithoutUseUploadName(): void
     {
         $filter = new RenameUploadMock($this->targetPath . '/testTargetDirectoryWillBeCreatedWithoutUseUploadName');
         $filter->setUseUploadName(false);
@@ -130,10 +95,7 @@ class RenameUploadTest extends TestCase
         $this->assertTrue(file_exists($this->targetPath . '/testTargetDirectoryWillBeCreatedWithoutUseUploadName/' . $this->sourceFilename));
     }
 
-    /**
-     * @return void
-     */
-    public function testTargetDirectoryWillBeCreatedWithUseUploadName()
+    public function testTargetDirectoryWillBeCreatedWithUseUploadName(): void
     {
         $filter = new RenameUploadMock($this->targetPath . '/testTargetDirectoryWillBeCreatedWithUseUploadName');
         $filter->setUseUploadName(true);
@@ -143,10 +105,7 @@ class RenameUploadTest extends TestCase
         $this->assertTrue(file_exists($this->targetPath . '/testTargetDirectoryWillBeCreatedWithUseUploadName/' . $this->sourceFilename));
     }
 
-    /**
-     * @return void
-     */
-    public function testTargetDirectoryWillBeCreatedWithUseUploadNameAndSanitize()
+    public function testTargetDirectoryWillBeCreatedWithUseUploadNameAndSanitize(): void
     {
         $filter = new RenameUploadMock($this->targetPath . '/testTargetDirectoryWillBeCreatedWithUseUploadNameWithoutBar');
         $filter->setUseUploadName(true);
@@ -158,10 +117,7 @@ class RenameUploadTest extends TestCase
         $this->assertTrue(file_exists($this->targetPath . '/testTargetDirectoryWillBeCreatedWithUseUploadNameWithoutBar/' . $this->targetFilenameSanitized));
     }
 
-    /**
-     * @return void
-     */
-    public function testTargetPathFileWillBeCreated()
+    public function testTargetPathFileWillBeCreated(): void
     {
         $filter = new RenameUploadMock([
             'target' => $this->targetPath,
@@ -175,10 +131,7 @@ class RenameUploadTest extends TestCase
         $this->assertEquals($this->targetPathFile, $filered);
     }
 
-    /**
-     * @return void
-     */
-    public function testTargetPathFileSanitizedWillBeCreated()
+    public function testTargetPathFileSanitizedWillBeCreated(): void
     {
         $filter = new RenameUploadMock([
             'target' => $this->targetPath,

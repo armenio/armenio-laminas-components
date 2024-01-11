@@ -9,19 +9,12 @@
 namespace ArmenioTest\Filter;
 
 use Armenio\Filter\StringReplace as StringReplaceFilter;
+use Laminas\Filter\Exception\ExceptionInterface;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class StringReplaceTest
- *
- * @package ArmenioTest\Filter
- */
 class StringReplaceTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testOptions()
+    public function testOptions(): void
     {
         $filter = new StringReplaceFilter([
             'search' => 1.1,
@@ -31,10 +24,7 @@ class StringReplaceTest extends TestCase
         $this->assertEquals('strongToReplace', $filter->getReplace());
     }
 
-    /**
-     * @return void
-     */
-    public function testGetSetOptions()
+    public function testGetSetOptions(): void
     {
         $filter = new StringReplaceFilter();
 
@@ -48,7 +38,7 @@ class StringReplaceTest extends TestCase
         $this->assertEquals('2', $filter->getReplace());
     }
 
-    public static function basicDataProvider()
+    public static function basicDataProvider(): array
     {
         $string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -148,13 +138,14 @@ class StringReplaceTest extends TestCase
     }
 
     /**
-     * @param $search
-     * @param $replace
-     * @param $subject
-     * @param $expected
-     *
      * @dataProvider basicDataProvider
-     * @return void
+     *
+     * @param mixed|string $search
+     * @param mixed|string $replace
+     * @param string $subject
+     * @param string $expected
+     *
+     * @throws ExceptionInterface
      */
     public function testBasic($search, $replace, $subject, $expected)
     {
@@ -165,7 +156,7 @@ class StringReplaceTest extends TestCase
         $this->assertEquals($expected, $filter($subject));
     }
 
-    public function returnUnfilteredDataProvider()
+    public function returnUnfilteredDataProvider(): array
     {
         $object = new \stdClass();
         $resource = opendir(__DIR__);
@@ -187,15 +178,16 @@ class StringReplaceTest extends TestCase
     }
 
     /**
-     * @param $search
-     * @param $replace
-     * @param $subject
-     * @param $expected
-     *
      * @dataProvider returnUnfilteredDataProvider
-     * @return void
+     *
+     * @param mixed|string $search
+     * @param mixed|string $replace
+     * @param string $subject
+     * @param string $expected
+     *
+     * @throws ExceptionInterface
      */
-    public function testReturnUnfiltered($search, $replace, $subject, $expected)
+    public function testReturnUnfiltered($search, $replace, $subject, $expected): void
     {
         $filter = new StringReplaceFilter([
             'search' => $search,
@@ -205,9 +197,9 @@ class StringReplaceTest extends TestCase
     }
 
     /**
-     * @return void
+     * @throws ExceptionInterface
      */
-    public function testDefaultOptions()
+    public function testDefaultOptions(): void
     {
         $expected = $subject = 'stringExpected';
         $filter = new StringReplaceFilter();

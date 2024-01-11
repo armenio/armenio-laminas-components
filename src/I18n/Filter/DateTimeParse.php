@@ -10,165 +10,88 @@ namespace Armenio\I18n\Filter;
 
 use Laminas\Filter\AbstractFilter;
 
-/**
- * Class DateTimeParse
- *
- * @package Armenio\I18n\Filter
- */
 class DateTimeParse extends AbstractFilter
 {
-    /**
-     * @var string|null
-     */
-    protected $locale;
+    protected ?string $locale = null;
 
-    /**
-     * @var int
-     */
-    protected $dateType = \IntlDateFormatter::SHORT;
+    protected int $dateType = \IntlDateFormatter::SHORT;
 
-    /**
-     * @var int
-     */
-    protected $timeType = \IntlDateFormatter::MEDIUM;
+    protected int $timeType = \IntlDateFormatter::MEDIUM;
 
-    /**
-     * @var string|null
-     */
-    protected $timezone;
+    protected ?string $timezone = null;
 
-    /**
-     * @var int
-     */
-    protected $calendar = \IntlDateFormatter::GREGORIAN;
+    protected int $calendar = \IntlDateFormatter::GREGORIAN;
 
-    /**
-     * @var string
-     */
-    protected $pattern = 'yyyy-MM-dd HH:mm:ss';
+    protected string $pattern = 'yyyy-MM-dd HH:mm:ss';
 
-    /**
-     * @var \IntlDateFormatter|null
-     */
-    protected $formatter;
+    protected ?\IntlDateFormatter $formatter = null;
 
-    /**
-     * @return string|null
-     */
     public function getLocale(): ?string
     {
         return $this->locale;
     }
 
-    /**
-     * @param string|null $locale
-     *
-     * @return $this
-     */
-    public function setLocale(?string $locale): self
+    public function setLocale(?string $locale): DateTimeParse
     {
         $this->locale = $locale;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getDateType(): int
     {
         return $this->dateType;
     }
 
-    /**
-     * @param int $dateType
-     *
-     * @return $this
-     */
-    public function setDateType(int $dateType): self
+    public function setDateType(int $dateType): DateTimeParse
     {
         $this->dateType = $dateType;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getTimeType(): int
     {
         return $this->timeType;
     }
 
-    /**
-     * @param int $timeType
-     *
-     * @return $this
-     */
-    public function setTimeType(int $timeType): self
+    public function setTimeType(int $timeType): DateTimeParse
     {
         $this->timeType = $timeType;
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTimezone(): ?string
     {
         return $this->timezone;
     }
 
-    /**
-     * @param string|null $timezone
-     *
-     * @return $this
-     */
-    public function setTimezone(?string $timezone): self
+    public function setTimezone(?string $timezone): DateTimeParse
     {
         $this->timezone = $timezone;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getCalendar(): int
     {
         return $this->calendar;
     }
 
-    /**
-     * @param int $calendar
-     *
-     * @return $this
-     */
-    public function setCalendar(int $calendar): self
+    public function setCalendar(int $calendar): DateTimeParse
     {
         $this->calendar = $calendar;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPattern(): string
     {
         return $this->pattern;
     }
 
-    /**
-     * @param string $pattern
-     *
-     * @return $this
-     */
-    public function setPattern(string $pattern): self
+    public function setPattern(string $pattern): DateTimeParse
     {
         $this->pattern = $pattern;
         return $this;
     }
 
-    /**
-     * @return \IntlDateFormatter|null
-     */
     public function getFormatter(): ?\IntlDateFormatter
     {
         if (null !== $this->formatter) {
@@ -237,23 +160,16 @@ class DateTimeParse extends AbstractFilter
         return $formatter;
     }
 
-    /**
-     * @param \IntlDateFormatter|null $formatter
-     *
-     * @return $this
-     */
-    public function setFormatter(?\IntlDateFormatter $formatter): self
+    public function setFormatter(?\IntlDateFormatter $formatter): DateTimeParse
     {
         $this->formatter = $formatter;
         return $this;
     }
 
     /**
-     * @param array|\Traversable $options
-     *
-     * @return $this|DateTimeParse
+     * @param array|iterable $options
      */
-    public function setOptions($options)
+    public function setOptions($options): DateTimeParse
     {
         parent::setOptions($options);
 
@@ -270,11 +186,6 @@ class DateTimeParse extends AbstractFilter
         return $this;
     }
 
-    /**
-     * DateTimeParse constructor.
-     *
-     * @param $options
-     */
     public function __construct($options)
     {
         $this->setOptions($options);
@@ -282,8 +193,6 @@ class DateTimeParse extends AbstractFilter
 
     /**
      * @param mixed $value
-     *
-     * @return false|mixed|string
      */
     public function filter($value)
     {

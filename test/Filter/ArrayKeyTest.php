@@ -9,19 +9,12 @@
 namespace ArmenioTest\Filter;
 
 use Armenio\Filter\ArrayKey as ArrayKeyFilter;
+use Laminas\Filter\Exception\ExceptionInterface;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class ArrayKeyTest
- *
- * @package ArmenioTest\Filter
- */
 class ArrayKeyTest extends TestCase
 {
-    /**
-     * @return void
-     */
-    public function testOptions()
+    public function testOptions(): void
     {
         $filter = new ArrayKeyFilter([
             'key' => 'testKey',
@@ -29,17 +22,14 @@ class ArrayKeyTest extends TestCase
         $this->assertEquals('testKey', $filter->getKey());
     }
 
-    /**
-     * @return void
-     */
-    public function testGetSetOptions()
+    public function testGetSetOptions(): void
     {
         $filter = new ArrayKeyFilter();
         $filter->setKey('testKey0');
         $this->assertEquals('testKey0', $filter->getKey());
     }
 
-    public static function basicDataProvider()
+    public static function basicDataProvider(): array
     {
         $array = [
             0 => 'a',
@@ -67,14 +57,15 @@ class ArrayKeyTest extends TestCase
     }
 
     /**
-     * @param $key
-     * @param $input
-     * @param $expected
-     *
      * @dataProvider basicDataProvider
-     * @return void
+     *
+     * @param int|string $key
+     * @param mixed $input
+     * @param mixed $expected
+     *
+     * @throws ExceptionInterface
      */
-    public function testBasic($key, $input, $expected)
+    public function testBasic($key, $input, $expected): void
     {
         $filter = new ArrayKeyFilter([
             'key' => $key,
@@ -82,7 +73,7 @@ class ArrayKeyTest extends TestCase
         $this->assertEquals($expected, $filter($input));
     }
 
-    public static function invalidKeyDataProvider()
+    public static function invalidKeyDataProvider(): array
     {
         $array = [
             'a' => 'a',
@@ -110,14 +101,15 @@ class ArrayKeyTest extends TestCase
     }
 
     /**
-     * @param $key
-     * @param $input
-     * @param $expected
-     *
      * @dataProvider basicDataProvider
-     * @return void
+     *
+     * @param int|string $key
+     * @param mixed $input
+     * @param mixed $expected
+     *
+     * @throws ExceptionInterface
      */
-    public function testInvalidKey($key, $input, $expected)
+    public function testInvalidKey($key, $input, $expected): void
     {
         $filter = new ArrayKeyFilter([
             'key' => $key,
@@ -125,7 +117,7 @@ class ArrayKeyTest extends TestCase
         $this->assertEquals($expected, $filter($input));
     }
 
-    public function returnUnfilteredDataProvider()
+    public function returnUnfilteredDataProvider(): array
     {
         $object = new \stdClass();
         $resource = opendir(__DIR__);
@@ -185,14 +177,15 @@ class ArrayKeyTest extends TestCase
     }
 
     /**
-     * @param $key
-     * @param $input
-     * @param $expected
-     *
      * @dataProvider returnUnfilteredDataProvider
-     * @return void
+     *
+     * @param int|string $key
+     * @param mixed $input
+     * @param mixed $expected
+     *
+     * @throws ExceptionInterface
      */
-    public function testReturnUnfiltered($key, $input, $expected)
+    public function testReturnUnfiltered($key, $input, $expected): void
     {
         $filter = new ArrayKeyFilter([
             'key' => $key,
